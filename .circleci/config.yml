@@ -32,11 +32,11 @@ jobs:
       
       - run:
           name: Run CS tests PSR1
-          command: vendor/bin/phpcs --standard=PSR1 ./module/Application/src/
+          command: vendor/bin/phpcs --standard=PSR1 ./module/
           
       - run:
           name: Run CS tests PEAR
-          command: vendor/bin/phpcs ./module/Application/src/
+          command: vendor/bin/phpcs ./module/
       - run:
           name: Check Syntax Project
           command: find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
