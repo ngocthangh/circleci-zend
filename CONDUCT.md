@@ -41,3 +41,10 @@ In the effort to create such a place, we hold to these values:
 8. **To err is human.** You might not intend it, but mistakes do happen and
    contribute to build experience. Tolerate honest mistakes, and don't hesitate
    to apologize if you make one yourself.
+
+"require": {
+        "php": "^5.6 || ^7.0",
+        "zendframework/zend-component-installer": "^1.0 || ^2.1",
+        "zendframework/zend-mvc": "^3.1.1",
+        "zfcampus/zf-development-mode": "^3.2"
+    },
