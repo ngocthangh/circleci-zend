@@ -39,7 +39,7 @@ jobs:
           command: vendor/bin/phpcs ./module/Application/src/
       - run:
           name: Check Syntax Project
-          command: find . -name '*.php' -print0| xargs -0 -n1 php -l
+          command: find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
           # command: find . -name '*.php' -exec php -l {} \; 2> error.txt && sh ./.circleci/check.sh && echo "Error File:" && cat error.txt
       
       # - run:
