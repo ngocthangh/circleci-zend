@@ -1,0 +1,56 @@
+version: 2
+jobs:
+  build:
+    working_directory: /var/www/html
+    docker:
+      - image: php:7.1-apache
+        environment:
+          APP_ENV: test
+    steps:
+      - run:
+          name: Install system packages
+          command: apt-get update && apt-get -y install git
+      # - run:
+      #     name: Install PHP extensions
+      #     command: docker-php-ext-install pdo
+      - checkout
+      - run:
+          name: Install Composer
+          command: |
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            php -r "if (hash_file('SHA384', 'composer-setup.php') === trim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer invalid'; unlink('composer-setup.php'); } echo PHP_EOL;"
+            php composer-setup.php
+            php -r "unlink('composer-setup.php');"
+      - run:
+          name: Display PHP information
+          command: |
+            php -v
+            php composer.phar --version
+      - run:
+          name: Install project dependencies
+          command: php composer.phar install --no-interaction
+      
+      - run:
+          name: Run CS tests PSR1
+          command: vendor/bin/phpcs --standard=PSR1 ./module/Application/src/
+          
+      - run:
+          name: Run CS tests PEAR
+          command: vendor/bin/phpcs ./module/Application/src/
+      - run:
+          name: Check Syntax Project
+          command: find . -name '*.php' -print0| xargs -0 -n1 php -l
+          # command: find . -name '*.php' -exec php -l {} \; 2> error.txt && sh ./.circleci/check.sh && echo "Error File:" && cat error.txt
+      
+      # - run:
+      #     name: Run CS tests Zend
+      #     command: vendor/bin/phpcs --standard=Zend ./module/Application/src/
+      # - run:
+      #     name: Run CS tests Squiz (really detail - not use)
+      #     command: vendor/bin/phpcs --standard=Squiz ./module/Application/src/
+      # - run:
+      #     name: Run CS tests MySource
+      #     command: vendor/bin/phpcs --standard=MySource ./module/Application/src/
+      - run:
+          name: Run Unit tests
+          command: vendor/bin/phpunit
